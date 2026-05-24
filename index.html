@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ASA Studio — Android Apps</title>
+  <meta name="description" content="ASA Studio builds clean, useful Android apps. Simple tools, smart design, real value for everyday users."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --green-deep:   #0A5C48;
+      --green-main:   #0F6E56;
+      --green-mid:    #1D9E75;
+      --green-light:  #5DCAA5;
+      --green-pale:   #9FE1CB;
+      --cream:        #F4F0E8;
+      --cream-dark:   #E8E2D6;
+      --ink:          #0D1A15;
+      --ink-soft:     #1C2E27;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--cream);
+      color: var(--ink);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.2rem 3rem;
+      background: rgba(244,240,232,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--cream-dark);
+    }
+    .nav-logo {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.4rem;
+      color: var(--green-main);
+      text-decoration: none;
+      letter-spacing: 0.01em;
+    }
+    .nav-logo span { color: var(--green-light); font-style: italic; }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a {
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--ink-soft);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--green-main); }
+
+    /* ─── HERO ─── */
+    .hero {
+      min-height: 100vh;
+      background: var(--green-main);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Dot grid pattern */
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image: radial-gradient(circle, rgba(93,202,165,0.25) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+    }
+
+    .hero-left {
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 8rem 4rem 6rem 6rem;
+      position: relative; z-index: 2;
+    }
+
+    .hero-eyebrow {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 400;
+      color: var(--green-light);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.2s forwards;
+    }
+
+    .hero-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(3.5rem, 6vw, 6rem);
+      line-height: 1.05;
+      color: var(--cream);
+      margin-bottom: 1.8rem;
+      opacity: 0;
+      animation: fadeUp 0.9s 0.35s forwards;
+    }
+    .hero-title em {
+      font-style: italic;
+      color: var(--green-pale);
+    }
+
+    .hero-sub {
+      font-size: 1.1rem;
+      font-weight: 300;
+      color: rgba(244,240,232,0.75);
+      max-width: 420px;
+      line-height: 1.75;
+      margin-bottom: 3rem;
+      opacity: 0;
+      animation: fadeUp 0.9s 0.5s forwards;
+    }
+
+    .hero-cta {
+      display: inline-flex; align-items: center; gap: 0.7rem;
+      background: var(--cream);
+      color: var(--green-main);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+      padding: 0.9rem 2rem;
+      border-radius: 3px;
+      letter-spacing: 0.03em;
+      transition: background 0.2s, transform 0.2s;
+      width: fit-content;
+      opacity: 0;
+      animation: fadeUp 0.9s 0.65s forwards;
+    }
+    .hero-cta:hover { background: var(--green-pale); transform: translateY(-2px); }
+    .hero-cta svg { transition: transform 0.2s; }
+    .hero-cta:hover svg { transform: translateX(4px); }
+
+    .hero-right {
+      display: flex; align-items: center; justify-content: center;
+      position: relative; z-index: 2;
+      padding: 8rem 4rem 4rem;
+    }
+
+    /* Big decorative monogram */
+    .hero-monogram {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(8rem, 16vw, 16rem);
+      color: transparent;
+      -webkit-text-stroke: 2px rgba(93,202,165,0.35);
+      line-height: 1;
+      letter-spacing: -0.05em;
+      user-select: none;
+      opacity: 0;
+      animation: fadeIn 1.2s 0.8s forwards;
+    }
+    .hero-badge {
+      position: absolute;
+      bottom: 3.5rem; right: 4rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--green-light);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      opacity: 0;
+      animation: fadeIn 1s 1.2s forwards;
+    }
+
+    /* scroll indicator */
+    .scroll-hint {
+      position: absolute;
+      bottom: 2.5rem; left: 50%;
+      transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      z-index: 5;
+      opacity: 0;
+      animation: fadeIn 1s 1.5s forwards;
+    }
+    .scroll-hint span {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      color: rgba(93,202,165,0.6);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+    .scroll-line {
+      width: 1px; height: 40px;
+      background: linear-gradient(to bottom, var(--green-light), transparent);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+
+    /* ─── ABOUT ─── */
+    .about {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 60vh;
+    }
+    .about-text {
+      padding: 6rem;
+      background: var(--cream);
+    }
+    .about-text .section-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--green-mid);
+      margin-bottom: 1.5rem;
+    }
+    .about-text h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2rem, 3.5vw, 3rem);
+      line-height: 1.15;
+      color: var(--ink);
+      margin-bottom: 1.5rem;
+    }
+    .about-text h2 em { font-style: italic; color: var(--green-main); }
+    .about-text p {
+      font-size: 1rem;
+      font-weight: 300;
+      color: #3a4a43;
+      max-width: 420px;
+      line-height: 1.85;
+    }
+    .about-visual {
+      background: var(--ink);
+      display: flex; align-items: center; justify-content: center;
+      position: relative; overflow: hidden;
+    }
+    .about-visual::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 30% 50%, rgba(15,110,86,0.5) 0%, transparent 70%);
+    }
+    .about-stat-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 2px;
+      width: 100%; height: 100%;
+    }
+    .stat-cell {
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 3rem 2rem;
+      border: 1px solid rgba(93,202,165,0.1);
+      background: rgba(13,26,21,0.6);
+      transition: background 0.3s;
+    }
+    .stat-cell:hover { background: rgba(15,110,86,0.25); }
+    .stat-num {
+      font-family: 'DM Serif Display', serif;
+      font-size: 3rem;
+      color: var(--green-pale);
+      line-height: 1;
+      margin-bottom: 0.4rem;
+    }
+    .stat-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(93,202,165,0.6);
+      text-align: center;
+    }
+
+    /* ─── APPS ─── */
+    .apps {
+      padding: 6rem;
+      background: var(--cream-dark);
+    }
+    .apps-header {
+      display: flex; align-items: flex-end; justify-content: space-between;
+      margin-bottom: 3.5rem;
+    }
+    .apps-header h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2rem, 3vw, 2.8rem);
+      line-height: 1.1;
+    }
+    .apps-header h2 em { font-style: italic; color: var(--green-main); }
+    .apps-header a {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--green-main);
+      text-decoration: none;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--green-mid);
+      padding-bottom: 2px;
+      transition: color 0.2s;
+    }
+    .apps-header a:hover { color: var(--green-mid); }
+
+    .apps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5px;
+      background: rgba(0,0,0,0.08);
+    }
+    .app-card {
+      background: var(--cream);
+      padding: 2rem;
+      display: flex; flex-direction: column; gap: 1rem;
+      transition: background 0.25s;
+      text-decoration: none;
+      color: inherit;
+      cursor: default;
+    }
+    .app-card:hover { background: white; }
+    .app-icon {
+      width: 52px; height: 52px;
+      border-radius: 12px;
+      background: var(--green-main);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem;
+    }
+    .app-name {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.2rem;
+      color: var(--ink);
+    }
+    .app-desc {
+      font-size: 0.88rem;
+      font-weight: 300;
+      color: #5a6e65;
+      line-height: 1.65;
+      flex: 1;
+    }
+    .app-tag {
+      display: inline-block;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--green-main);
+      background: rgba(15,110,86,0.08);
+      padding: 3px 10px;
+      border-radius: 2px;
+      width: fit-content;
+    }
+
+    /* ─── CONTACT ─── */
+    .contact {
+      background: var(--green-deep);
+      padding: 6rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+    .contact h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2rem, 3.5vw, 3.2rem);
+      color: var(--cream);
+      line-height: 1.1;
+    }
+    .contact h2 em { font-style: italic; color: var(--green-pale); }
+    .contact-links { display: flex; flex-direction: column; gap: 1rem; }
+    .contact-link {
+      display: flex; align-items: center; gap: 1rem;
+      text-decoration: none;
+      color: rgba(244,240,232,0.7);
+      font-size: 0.95rem;
+      font-weight: 300;
+      transition: color 0.2s;
+      padding: 1rem;
+      border: 1px solid rgba(93,202,165,0.15);
+      border-radius: 4px;
+      transition: background 0.2s, color 0.2s;
+    }
+    .contact-link:hover { background: rgba(93,202,165,0.08); color: var(--green-pale); }
+    .contact-link-icon {
+      width: 36px; height: 36px;
+      border-radius: 8px;
+      background: rgba(93,202,165,0.12);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: var(--ink);
+      padding: 2rem 6rem;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    footer .logo {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.1rem;
+      color: var(--green-light);
+    }
+    footer p {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      color: rgba(93,202,165,0.4);
+      letter-spacing: 0.1em;
+    }
+
+    /* ─── ANIMATIONS ─── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.4; transform: scaleY(1); }
+      50%       { opacity: 1;   transform: scaleY(1.3); }
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 900px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { gap: 1.5rem; }
+      .hero { grid-template-columns: 1fr; }
+      .hero-right { display: none; }
+      .hero-left { padding: 7rem 2rem 4rem; }
+      .about { grid-template-columns: 1fr; }
+      .about-visual { min-height: 280px; }
+      .about-text { padding: 3.5rem 2rem; }
+      .apps { padding: 4rem 2rem; }
+      .contact { grid-template-columns: 1fr; padding: 4rem 2rem; }
+      footer { flex-direction: column; gap: 1rem; text-align: center; padding: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-logo" href="#">ASA <span>Studio</span></a>
+    <ul class="nav-links">
+      <li><a href="#apps">Apps</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+      <li><a href="https://play.google.com/store/apps/developer?id=ASA+Studio" target="_blank">Play Store ↗</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-left">
+      <p class="hero-eyebrow">// asastudio.dev</p>
+      <h1 class="hero-title">
+        Apps built<br/>for <em>real</em><br/>everyday use.
+      </h1>
+      <p class="hero-sub">
+        ASA Studio crafts clean, purposeful Android apps — from productivity tools to lifestyle utilities. Independent. Focused. Useful.
+      </p>
+      <a class="hero-cta" href="https://play.google.com/store/apps/developer?id=ASA+Studio" target="_blank">
+        View on Google Play
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
+    <div class="hero-right">
+      <div class="hero-monogram">ASA</div>
+      <p class="hero-badge">Google Play Developer · Since 2024</p>
+    </div>
+    <div class="scroll-hint">
+      <span>Scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="about" id="about">
+    <div class="about-text">
+      <p class="section-label">// who we are</p>
+      <h2>Independent studio.<br/><em>Thoughtful</em> software.</h2>
+      <p>
+        ASA Studio is an independent Android developer focused on building clean, useful apps. Every app ships with a clear purpose — no bloat, no dark patterns. Just tools that work.
+      </p>
+    </div>
+    <div class="about-visual">
+      <div class="about-stat-grid">
+        <div class="stat-cell">
+          <span class="stat-num">10+</span>
+          <span class="stat-label">Apps Published</span>
+        </div>
+        <div class="stat-cell">
+          <span class="stat-num">4.5★</span>
+          <span class="stat-label">Avg. Rating</span>
+        </div>
+        <div class="stat-cell">
+          <span class="stat-num">100%</span>
+          <span class="stat-label">Flutter Built</span>
+        </div>
+        <div class="stat-cell">
+          <span class="stat-num">Free</span>
+          <span class="stat-label">Core Features</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- APPS -->
+  <section class="apps" id="apps">
+    <div class="apps-header">
+      <h2>Our <em>apps</em></h2>
+      <a href="https://play.google.com/store/apps/developer?id=ASA+Studio" target="_blank">See all on Play Store →</a>
+    </div>
+    <div class="apps-grid">
+      <div class="app-card">
+        <div class="app-icon">🤖</div>
+        <p class="app-name">Caption AI</p>
+        <p class="app-desc">Generate smart captions for your photos instantly using AI. Perfect for social media.</p>
+        <span class="app-tag">AI · Productivity</span>
+      </div>
+      <div class="app-card">
+        <div class="app-icon">🍎</div>
+        <p class="app-name">Food Scan</p>
+        <p class="app-desc">Scan any food barcode to instantly see calories, nutrients and health info.</p>
+        <span class="app-tag">Health · Lifestyle</span>
+      </div>
+      <div class="app-card">
+        <div class="app-icon">📄</div>
+        <p class="app-name">Invoice Pro</p>
+        <p class="app-desc">Create and send professional invoices in seconds. Built for freelancers and small businesses.</p>
+        <span class="app-tag">Business · Finance</span>
+      </div>
+      <div class="app-card">
+        <div class="app-icon">📊</div>
+        <p class="app-name">CryptoRadar</p>
+        <p class="app-desc">Track crypto prices, news and market trends. Bitcoin, Ethereum and all major coins.</p>
+        <span class="app-tag">Finance · Crypto</span>
+      </div>
+      <div class="app-card">
+        <div class="app-icon">⭐</div>
+        <p class="app-name">Horoscope du Jour</p>
+        <p class="app-desc">Daily horoscope and astrology readings for all 12 signs. Available in multiple languages.</p>
+        <span class="app-tag">Lifestyle · Astro</span>
+      </div>
+      <div class="app-card">
+        <div class="app-icon">🌐</div>
+        <p class="app-name">Translation AI</p>
+        <p class="app-desc">Instant AI-powered translation across 100+ languages. Speak, type or paste text.</p>
+        <span class="app-tag">AI · Language</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="contact" id="contact">
+    <h2>Get in<br/><em>touch</em><br/>with us.</h2>
+    <div class="contact-links">
+      <a class="contact-link" href="mailto:aminesallah1@gmail.com">
+        <span class="contact-link-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5DCAA5" stroke-width="1.5"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
+        </span>
+        aminesallah1@gmail.com
+      </a>
+      <a class="contact-link" href="https://play.google.com/store/apps/developer?id=ASA+Studio" target="_blank">
+        <span class="contact-link-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5DCAA5" stroke-width="1.5"><path d="M5 3l14 9-14 9V3z"/></svg>
+        </span>
+        Google Play Store Profile
+      </a>
+      <a class="contact-link" href="https://github.com" target="_blank">
+        <span class="contact-link-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5DCAA5" stroke-width="1.5"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+        </span>
+        GitHub — ASA Studio
+      </a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <span class="logo">ASA Studio</span>
+    <p>© 2026 ASA Studio · Built with Flutter · Marrakech, Morocco</p>
+  </footer>
+
+</body>
+</html>
